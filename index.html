@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Privilege Checker</title>
+</head>
+<body>
+    <h1>User Privilege Checker</h1>
+    <form id="userForm">
+        <label for="username">Enter Username:</label>
+        <input type="text" id="username" name="username" required>
+        <button type="submit">Check</button>
+    </form>
+    <div id="result"></div>
+    <button id="backButton" style="display:none;">Back</button>
+    <script>
+        document.getElementById('userForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const response = await fetch('/check', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username })
+            });
+            const result = await response.json();
+            document.getElementById('result').textContent = `User ${result.username} has privilege: ${result.privilege}`;
+            document.getElementById('backButton').style.display = 'block';
+        });
+
+        document.getElementById('backButton').addEventListener('click', () => {
+            document.getElementById('result').textContent = '';
+            document.getElementById('backButton').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
